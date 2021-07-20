@@ -6,7 +6,7 @@ After initializing the website and database, there are a few more steps to be do
 
 ## 1. Security Setup
 
-aasd
+...
 
 ---
 
@@ -40,22 +40,26 @@ Port 587 is currently the default mail submission port. Port 587 can be used wit
 
 This guide will have the Gmail SMTP Server for our email tranmission setup.
 
-- Gmail SMTP server address: smtp.gmail.com
-- Gmail SMTP name: Your Full Name
-- Gmail SMTP username: Your full Gmail address (e.g. you@gmail.com)
-- Gmail SMTP password: The password that you use to log in to Gmail
-- Gmail SMTP port (TLS): 587
-- Gmail SMTP port (SSL): 465
+- Gmail Outgoing Mail (SMTP) Server: smtp.gmail.com
+- Requires SSL: Yes
+- Requires TLS: Yes (if available)
+- Requires Authentication: Yes
+- Port for SSL: 465
+- Port for TLS/STARTTLS: 587
+- Account Name, User name, or Email address: Your full email address
+- Password: Your Gmail password
 
-Inferring from the information above, we can see that port 465 or 587 must be used. Information of Gmail SMTP Server taken from [a](https://kinsta.com/blog/gmail-smtp-server/)
+Inferring from the information above, we can see that port 465 or 587 must be used. 
+
+Information of Gmail SMTP Server taken from [Gmail Help Center](https://support.google.com/mail/answer/7126229?hl=en).
 
 ---
 
 ### 2.3. Email Address for Your Team
 
-It's preferred to create an email address for MantisBT to use. As this guide aims to use Gmail SMTP Server, a Google Account viewpoint will be used.
+It's preferred to create an email address for MantisBT to use. As this guide aims to use Gmail SMTP Server, instructions to allow an Google Account to be used by MantisBT will be provided.
 
-After creating/ or prepared a Google email address, navigate to the Security section of the Google Account settings.
+After creating/ or having prepared a Google email address for your team, navigate to the Security section of the Google Account settings.
 
 Ensure that 'Allow less secure apps' is enabled (there should be a warning).
 
@@ -77,7 +81,7 @@ Enable registration and password reset:
 
 ```js
 $g_allow_signup = ON;
-$g_send_reset_password
+$g_send_reset_password = ON;
 ```
 
 Enable email notification:
@@ -150,6 +154,7 @@ Here are all the configurations in one block:
 
 ```js
 $g_allow_signup = ON;
+$g_send_reset_password = ON;
 $g_enable_email_notification = ON;
 $g_phpMailer_method = PHPMAILER_METHOD_SMTP;
 $g_smtp_host = 'smtp.gmail.com';
@@ -157,7 +162,6 @@ $g_smtp_connection_mode = 'tls';
 $g_smtp_port = 587;
 $g_smtp_username = 'yourteam@gmail.com';
 $g_smtp_password = 'emailpassword';
-$g_administrator_email = 'yourteam@gmail.com';
 $g_webmaster_email = 'yourteam@gmail.com';
 $g_from_email = 'yourteam@gmail.com';
 $g_from_name = 'Your Team Name';
@@ -166,7 +170,11 @@ $g_return_path_email = 'yourteam@gmail.com';
 
 ### 2.5. Test sending email
 
-After configuring SMTP Server for MantisBT, on your browser, access the url '<your_server>/<your_mantis>/admin/email_queue.php' and click 'Send Mail' to run an email sending test.
+After configuring SMTP Server for MantisBT, on your browser, access the below url and click 'Send Mail' to run an email sending test.
+
+```md
+<your_server>/<your_mantis>/admin/email_queue.php
+```
 
 Check your team email address inbox to verify that the email was sent successfully.
 
@@ -174,13 +182,43 @@ Check your team email address inbox to verify that the email was sent successful
 
 ## 3. Administration Configuration
 
-Next up is configuring the administrator acount, the default administrator acount shouldn't be used. Instead create a new account
+Access the below url and login using the default administrator account.
+
+```md
+<your_server>/<your_mantis>/login_page.php
+```
+
+- Username: administrator
+- Password: root
+
+Next up is configuring the administrator acount, the default administrator account shouldn't be used after initial setup for security measures.
+
+With that in mind, let's create a new administrator account. Navigate to Manage > Manage Users > Create New Account.
+
+Enter required information, the email address shouldn't be your team email address. It could be your personal or business email address.
+
+Set the 'Access Level' of the account to 'administrator'.
+
+Make sure 'Enabled' is checked.
+
+On the other hand, 'Protected' shouldn't be checked, a protected account indicates a shared account, for example a guest/demo account.
+Such account won't be able to change any account settings.
+
+Press 'Create Account' to create an administrator account for your team.
+
+After verifying that the account had been created, navigate to the default administrator account and disable (un-check 'Enabled') or delete ('Delete User' button) it.
+
+Finally, logout of the default administrator account and login with your newly-created administrator account.
 
 ---
 
 ## 4. Installation Check
 
-After finish setting up the administrator account, on your browser, access the url '<your_server>/<your_mantis>/admin/check/index.php' to review the installation.
+After finish setting up the administrator account, on your browser, access the below url to review the installation.
+
+```md
+<your_server>/<your_mantis>/admin/check/index.php
+```
 
 Keep in mind that the non-italic messages in the tests are not facts. They should be understood as 'checking if X is true'.
 
